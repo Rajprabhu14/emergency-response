@@ -8,6 +8,9 @@ common_success_response = DotMap(
     success_volunteer_registration=DotMap(message=_('Volunteering registered. You will receive call shortly'),
                                           status_code=status.HTTP_201_CREATED,
                                           custom_code='15002'),
+    success_volunteer_password=DotMap(message=_('Password Updated'),
+                                      status_code=status.HTTP_200_OK,
+                                      custom_code='15003'),
 )
 
 common_failure_response = DotMap(

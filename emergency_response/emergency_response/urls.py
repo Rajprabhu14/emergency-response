@@ -23,7 +23,8 @@ from django.conf.urls import handler404
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/v1/', include('customer.urls')),
-    path('api/v1/', include('volunteer.urls'))
+    path('api/v1/', include('volunteer.urls')),
+    path('api/v1/', include('help_customer.urls')),
 ]
 
 handler404 = resposne_404 # noqa

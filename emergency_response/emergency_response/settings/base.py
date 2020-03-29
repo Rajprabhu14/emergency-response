@@ -45,7 +45,8 @@ INSTALLED_APPS = [
     # own app
     'customer',
     'common',
-    'volunteer'
+    'volunteer',
+    'help_customer'
 ]
 
 MIDDLEWARE = [
