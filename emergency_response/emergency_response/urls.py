@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from common.views import resposne_404
+# from common.views import response_404
 from django.conf.urls import handler404
 # from customer.urls import urlpattern
 
@@ -27,5 +27,5 @@ urlpatterns = [
     path('api/v1/', include('help_customer.urls')),
 ]
 
-handler404 = resposne_404 # noqa
+handler404 = 'common.views.response_404' # noqa
 # handler500 = 'rest_framework.exceptions.server_error'

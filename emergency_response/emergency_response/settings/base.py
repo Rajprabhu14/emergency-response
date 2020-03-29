@@ -132,5 +132,6 @@ STATIC_URL = '/static/'
 REST_FRAMEWORK = {
     'DEFAULT_PARSER_CLASSES': [
         'rest_framework.parsers.JSONParser',
-    ]
+    ],
+    'EXCEPTION_HANDLER': 'common.exceptions.custom_exception_handler'
 }

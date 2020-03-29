@@ -1,5 +1,5 @@
 from rest_framework import status
-from rest_framework.exceptions import APIException
+from rest_framework.exceptions import APIException, NotFound, MethodNotAllowed
 from rest_framework.views import exception_handler
 from common.constants import common_failure_response
 
@@ -10,11 +10,32 @@ class ServiceUnavailable(APIException):
     default_code = 'service_unavailable'
 
 
+class CUSTOMURLNOTFOUND(APIException):
+    status_code = common_failure_response.url_not_found.status_code
+    custom_error_code = common_failure_response.url_not_found.custom_code
+    default_code = common_failure_response.url_not_found.default_code
+    default_detail = common_failure_response.url_not_found.message
+
+
+class CustomMethodNotAllowed(APIException):
+    status_code = common_failure_response.method_not_allowed.status_code
+    custom_error_code = common_failure_response.method_not_allowed.custom_code
+    default_code = common_failure_response.method_not_allowed.default_code
+    default_detail = common_failure_response.method_not_allowed.message
+
+
 class VolunteerNotActivated(APIException):
-    status = common_failure_response.incorrect_volunteer_uid.status_code
-    custom_code = common_failure_response.incorrect_volunteer_uid.custom_code
+    status_code = common_failure_response.incorrect_volunteer_uid.status_code
+    custom_error_code = common_failure_response.incorrect_volunteer_uid.custom_code
     default_detail = common_failure_response.incorrect_volunteer_uid.message
     default_code = common_failure_response.incorrect_volunteer_uid.default_code
+
+
+class CustomerNotActivated(APIException):
+    status_code = common_failure_response.incorrect_customer_uid.status_code
+    custom_error_code = common_failure_response.incorrect_customer_uid.custom_code
+    default_detail = common_failure_response.incorrect_customer_uid.message
+    default_code = common_failure_response.incorrect_customer_uid.default_code
 
 
 def custom_response_handler(exc, context):
@@ -45,3 +66,19 @@ def common_failure_response_structure(data, status=status.HTTP_500_INTERNAL_SERV
         'custom_error_code': custom_error_code,
         'result': data
     }
+
+
+def custom_exception_handler(exc, context):
+    # Call REST framework's default exception handler first,
+    # to get the standard error response.
+    data = dict()
+    response = exception_handler(exc, context)
+    # Now add the HTTP status code to the response.
+    if response is not None and exc is not None:
+        data['status_code'] = exc.status_code
+        data['status'] = 'failure'
+        data['result'] = exc.detail
+        if exc.custom_error_code:
+            data['custom_error_code'] = exc.custom_error_code
+        response.data = data
+    return response

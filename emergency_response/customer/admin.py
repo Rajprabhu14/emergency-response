@@ -36,11 +36,11 @@ class CustomerDetailAdmin(StaffRequiredAdminMixin, admin.ModelAdmin):
         if not request.user.is_superuser:
             return ('verfication_completed', 'uid',
                     'name', 'phone_number', 'address', 'grocery',
-                    'landmark')
+                    'landmark', 'updated_by')
         else:
             return ('uid',
                     'name', 'phone_number', 'address', 'grocery',
-                    'landmark')
+                    'landmark', 'updated_by')
     # def has_change_permission(self, request, obj=None):
     #     return True
 

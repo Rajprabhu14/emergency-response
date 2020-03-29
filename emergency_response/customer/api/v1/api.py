@@ -9,10 +9,10 @@ from rest_framework.parsers import JSONParser
 from rest_framework.response import Response
 
 from common.constants import common_failure_response, common_success_response
-from common.exceptions import common_failure_response_structure, custom_success_handler
+from common.exceptions import common_failure_response_structure, custom_success_handler, CustomerNotActivated
 from customer.api.v1.serializers import CustomerDetailSerializer, ManipulateCustomerDetailSerializer
 from customer.models import CustomerDetails
-
+from django.shortcuts import get_object_or_404
 
 class CreateCustomer(CreateAPIView):
     serializer_class = CustomerDetailSerializer
@@ -53,6 +53,17 @@ class UpdateCustomerDetailsAPI(RetrieveUpdateAPIView):
     queryset = CustomerDetails.objects.all()
     lookup_field = 'uid'
 
+    def get_object(self):
+        query_set = self.get_queryset()
+        filter = {}
+        # for field in self.multiple_lookup_fields:
+        filter[self.lookup_field] = self.kwargs[self.lookup_field]
+        try:
+            obj = get_object_or_404(query_set, **filter)
+            # self.check_object_permissions(self.request, obj)
+            return obj
+        except Exception:
+            raise CustomerNotActivated
     def perform_update(self, serializer):
         if self.request.user.is_anonymous:
             serializer.save(updated_by=None)

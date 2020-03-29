@@ -1,6 +1,7 @@
 from django.contrib.auth.models import AnonymousUser
 from rest_framework.permissions import BasePermission, DjangoModelPermissions
 from rest_framework import permissions
+from common.exceptions import CustomMethodNotAllowed
 
 
 class CustomVolunteeringDjangoPermission(DjangoModelPermissions):
@@ -38,3 +39,11 @@ class IsOwnerOrReadOnly(BasePermission):
 
         # Write permissions are only allowed to the owner of the snippet.
         return obj.id == request.user.id
+
+
+class MethodPermission(BasePermission):
+    def has_permission(self, request, view):
+        if request.method in view.allowed_methods:
+            return True
+        else:
+            raise CustomMethodNotAllowed
