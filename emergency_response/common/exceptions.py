@@ -1,12 +1,20 @@
 from rest_framework import status
 from rest_framework.exceptions import APIException
 from rest_framework.views import exception_handler
+from common.constants import common_failure_response
 
 
 class ServiceUnavailable(APIException):
     status_code = 503
     default_detail = 'Service temporarily unavailable, try again later.'
     default_code = 'service_unavailable'
+
+
+class VolunteerNotActivated(APIException):
+    status = common_failure_response.incorrect_volunteer_uid.status_code
+    custom_code = common_failure_response.incorrect_volunteer_uid.custom_code
+    default_detail = common_failure_response.incorrect_volunteer_uid.message
+    default_code = common_failure_response.incorrect_volunteer_uid.default_code
 
 
 def custom_response_handler(exc, context):
@@ -26,7 +34,7 @@ def custom_success_handler(data, status_code=status.HTTP_200_OK, custom_success_
         'status_code': status_code,
         'custom_success_code': custom_success_code,
         'status': 'success',
-        'result': data.message
+        'result': data
     }
 
 

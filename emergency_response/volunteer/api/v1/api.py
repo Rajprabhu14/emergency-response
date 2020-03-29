@@ -48,7 +48,7 @@ class CreateVolunteerAPI(CreateAPIView):
             # serializer.validated_data.update({'location': point})
             # serializer.save()
             self.create(request)
-            data = custom_success_handler(common_success_response.success_volunteer_registration,
+            data = custom_success_handler(common_success_response.success_volunteer_registration.message,
                                           status_code=common_success_response.success_volunteer_registration.status_code,
                                           custom_success_code=common_success_response.success_volunteer_registration.custom_code)
             return Response(data, status=common_success_response.success_volunteer_registration.status_code)
@@ -102,7 +102,7 @@ class UpdateVolunteerPassword(UpdateAPIView):
                                                          custom_error_code=common_failure_response.validation_error.custom_code)
             return Response(response, status=status.HTTP_422_UNPROCESSABLE_ENTITY)
         self.update(request)
-        data = custom_success_handler(common_success_response.success_volunteer_password,
+        data = custom_success_handler(common_success_response.success_volunteer_password.message,
                                       status_code=common_success_response.success_volunteer_password.status_code,
                                       custom_success_code=common_success_response.success_volunteer_password.custom_code)
         return Response(data, status=common_success_response.success_volunteer_password.status_code)
