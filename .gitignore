@@ -6,3 +6,6 @@
 
 # env
 env/
+
+# local_settings
+**/*/settings/local_settings.py
