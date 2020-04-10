@@ -31,11 +31,16 @@ class VolunteerSerializer(serializers.ModelSerializer):
                                              required=True,
                                              write_only=True,
                                              validators=[password_validator])
+    is_volunteer = serializers.BooleanField(default=False, write_only=True)
+    is_customer = serializers.BooleanField(default=False, write_only=True)
     # location = serializers.CharField(write_only=True)
 
     def validate(self, validated_data):
         if validated_data['password'] != validated_data['conform_password']:
             raise serializers.ValidationError(detail='Password not matching', code='Invalid Password')
+        # validate input of is_customer, is_volunteer
+        if validated_data['is_volunteer'] == validated_data['is_customer']:
+            raise serializers.ValidationError(detail='Proxy Input', code='Proxy Input')
         return validated_data
 
     def create(self, validated_data):
@@ -46,8 +51,6 @@ class VolunteerSerializer(serializers.ModelSerializer):
             address=validated_data['address'],
             location=validated_data['location'],
             password=validated_data['password'],
-            # verfication_completed=validated_data['verfication_completed'],
-            # other_details=validated_data['other_details'],
         )
 
         return volunteer
@@ -56,7 +59,7 @@ class VolunteerSerializer(serializers.ModelSerializer):
         model = Volunteer
         multiple_lookup_field = ('uid', 'pk')
         fields = ['uid', 'email', 'name', 'phone_number', 'address',
-                  'location', 'verfication_completed', 'other_details', 'password', 'conform_password']
+                  'location', 'verfication_completed', 'other_details', 'password', 'conform_password','is_volunteer', 'is_customer']
         write_only_fields = ('location', 'password', 'conform_password')
         read_only_field = ('email', 'name', 'address', 'uid')
 

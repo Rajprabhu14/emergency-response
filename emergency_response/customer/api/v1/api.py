@@ -3,16 +3,20 @@ import json
 import requests
 from django.conf import settings
 from django.contrib.gis.geos import Point
+from django.shortcuts import get_object_or_404
 from rest_framework import status
 from rest_framework.generics import CreateAPIView, RetrieveUpdateAPIView
 from rest_framework.parsers import JSONParser
 from rest_framework.response import Response
 
 from common.constants import common_failure_response, common_success_response
-from common.exceptions import common_failure_response_structure, custom_success_handler, CustomerNotActivated
-from customer.api.v1.serializers import CustomerDetailSerializer, ManipulateCustomerDetailSerializer
+from common.exceptions import (CustomerNotActivated,
+                               common_failure_response_structure,
+                               custom_success_handler)
+from customer.api.v1.serializers import (CustomerDetailSerializer,
+                                         ManipulateCustomerDetailSerializer)
 from customer.models import CustomerDetails
-from django.shortcuts import get_object_or_404
+
 
 class CreateCustomer(CreateAPIView):
     serializer_class = CustomerDetailSerializer
@@ -23,7 +27,7 @@ class CreateCustomer(CreateAPIView):
         if not serializer.is_valid():
             response = common_failure_response_structure(serializer.errors,
                                                          status=common_failure_response.validation_error.status_code,
-                                                         custom_error_code=common_failure_response.validation_error.custom_codew)
+                                                         custom_code=common_failure_response.validation_error.custom_code)
             return Response(response, status=status.HTTP_422_UNPROCESSABLE_ENTITY)
         # Get data for location
         settings.MAP_MY_INDIA__PARAMS['address'] = serializer.validated_data['address']
@@ -36,14 +40,14 @@ class CreateCustomer(CreateAPIView):
             self.create(request)
             data = custom_success_handler(common_success_response.success_customer_data_entry.message,
                                           status_code=common_success_response.success_customer_data_entry.status_code,
-                                          custom_success_code=common_success_response.success_customer_data_entry.custom_code)
+                                          custom_code=common_success_response.success_customer_data_entry.custom_code)
             return Response(data, status=common_success_response.success_customer_data_entry.status_code)
         else:
             # error retrieval for api
             # logger adding(r.json())
             response = common_failure_response_structure(common_failure_response.location_creation_error.messages,
                                                          status=common_failure_response.location_creation_error.status_code,
-                                                         custom_error_code=common_failure_response.location_creation_error.custom_code)
+                                                         custom_code=common_failure_response.location_creation_error.custom_code)
             return Response(response, status=common_failure_response.location_creation_error.status_code)
 
 
@@ -64,6 +68,7 @@ class UpdateCustomerDetailsAPI(RetrieveUpdateAPIView):
             return obj
         except Exception:
             raise CustomerNotActivated
+
     def perform_update(self, serializer):
         if self.request.user.is_anonymous:
             serializer.save(updated_by=None)

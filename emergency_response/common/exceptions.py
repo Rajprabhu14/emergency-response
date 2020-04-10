@@ -1,6 +1,7 @@
 from rest_framework import status
-from rest_framework.exceptions import APIException, NotFound, MethodNotAllowed
+from rest_framework.exceptions import APIException
 from rest_framework.views import exception_handler
+
 from common.constants import common_failure_response
 
 
@@ -12,28 +13,28 @@ class ServiceUnavailable(APIException):
 
 class CUSTOMURLNOTFOUND(APIException):
     status_code = common_failure_response.url_not_found.status_code
-    custom_error_code = common_failure_response.url_not_found.custom_code
+    custom_code = common_failure_response.url_not_found.custom_code
     default_code = common_failure_response.url_not_found.default_code
     default_detail = common_failure_response.url_not_found.message
 
 
 class CustomMethodNotAllowed(APIException):
     status_code = common_failure_response.method_not_allowed.status_code
-    custom_error_code = common_failure_response.method_not_allowed.custom_code
+    custom_code = common_failure_response.method_not_allowed.custom_code
     default_code = common_failure_response.method_not_allowed.default_code
     default_detail = common_failure_response.method_not_allowed.message
 
 
 class VolunteerNotActivated(APIException):
     status_code = common_failure_response.incorrect_volunteer_uid.status_code
-    custom_error_code = common_failure_response.incorrect_volunteer_uid.custom_code
+    custom_code = common_failure_response.incorrect_volunteer_uid.custom_code
     default_detail = common_failure_response.incorrect_volunteer_uid.message
     default_code = common_failure_response.incorrect_volunteer_uid.default_code
 
 
 class CustomerNotActivated(APIException):
     status_code = common_failure_response.incorrect_customer_uid.status_code
-    custom_error_code = common_failure_response.incorrect_customer_uid.custom_code
+    custom_code = common_failure_response.incorrect_customer_uid.custom_code
     default_detail = common_failure_response.incorrect_customer_uid.message
     default_code = common_failure_response.incorrect_customer_uid.default_code
 
@@ -50,20 +51,20 @@ def custom_response_handler(exc, context):
     return response
 
 
-def custom_success_handler(data, status_code=status.HTTP_200_OK, custom_success_code=15001):
+def custom_success_handler(data, status_code=status.HTTP_200_OK, custom_code=15001):
     return {
         'status_code': status_code,
-        'custom_success_code': custom_success_code,
+        'custom_code': custom_code,
         'status': 'success',
         'result': data
     }
 
 
-def common_failure_response_structure(data, status=status.HTTP_500_INTERNAL_SERVER_ERROR, custom_error_code=191919):
+def common_failure_response_structure(data, status=status.HTTP_500_INTERNAL_SERVER_ERROR, custom_code=191919):
     return {
         'status_code': status,
         'status': 'failure',
-        'custom_error_code': custom_error_code,
+        'custom_code': custom_code,
         'result': data
     }
 
@@ -78,7 +79,7 @@ def custom_exception_handler(exc, context):
         data['status_code'] = exc.status_code
         data['status'] = 'failure'
         data['result'] = exc.detail
-        if exc.custom_error_code:
-            data['custom_error_code'] = exc.custom_error_code
+        if exc.custom_code:
+            data['custom_code'] = exc.custom_code
         response.data = data
     return response

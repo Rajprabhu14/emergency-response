@@ -1,22 +1,23 @@
-from customer.models import CustomerDetails, order_choice, default_choice
 from rest_framework import serializers
+from rest_framework_gis.serializers import GeoFeatureModelSerializer
+from customer.models import CustomerDetails, order_choice
 
 
-class CustomerDetailSerializer(serializers.ModelSerializer):
-    verfication_completed = serializers.BooleanField(write_only=True)
+class CustomerDetailSerializer(GeoFeatureModelSerializer):
+    verfication_completed = serializers.BooleanField(write_only=True, default=False)
     order_status = serializers.SerializerMethodField()
-    location_details = serializers.SerializerMethodField()
 
     class Meta:
         model = CustomerDetails
+        geo_field = "location"
         fields = ['uid', 'name', 'phone_number', 'address', 'grocery',
-                  'landmark', 'order_status', 'verfication_completed', 'location_details']
-        write_only = ('verfication_completed', 'location', 'other_detail')
+                  'landmark', 'order_status', 'verfication_completed']
+        write_only = ('verfication_completed', 'other_detail', 'location')
 
     def get_order_status(self, obj):
         return obj.get_order_status_display()
 
-    def get_location_details(Self, obj):
+    def get_location_details(self, obj):
         return obj.location.geojson
 
 

@@ -14,10 +14,10 @@ from rest_framework.response import Response
 from common.constants import common_failure_response, common_success_response
 from common.exceptions import (common_failure_response_structure,
                                custom_success_handler)
-from common.permissions import (CustomPermissionRules,
-                                CustomPostDjangoPermission,
-                                CustomVolunteeringDjangoPermission,
-                                IsOwnerOrReadOnly)
+# from common.permissions import (CustomPermissionRules,
+#                                 CustomPostDjangoPermission,
+#                                 CustomVolunteeringDjangoPermission,
+#                                 IsOwnerOrReadOnly)
 from volunteer.api.v1.serializers import (ManipulateVolunteerSerializer,
                                           UpdatePasswordVolunteerSerializer,
                                           VolunteerSerializer)
@@ -35,7 +35,7 @@ class CreateVolunteerAPI(CreateAPIView):
         if not serializer.is_valid():
             response = common_failure_response_structure(serializer.errors,
                                                          status=common_failure_response.validation_error.status_code,
-                                                         custom_error_code=common_failure_response.validation_error.custom_code)
+                                                         custom_code=common_failure_response.validation_error.custom_code)
             return Response(response, status=status.HTTP_422_UNPROCESSABLE_ENTITY)
         # Get data for location
         settings.MAP_MY_INDIA__PARAMS['address'] = serializer.validated_data['address']
@@ -50,14 +50,14 @@ class CreateVolunteerAPI(CreateAPIView):
             self.create(request)
             data = custom_success_handler(common_success_response.success_volunteer_registration.message,
                                           status_code=common_success_response.success_volunteer_registration.status_code,
-                                          custom_success_code=common_success_response.success_volunteer_registration.custom_code)
+                                          custom_code=common_success_response.success_volunteer_registration.custom_code)
             return Response(data, status=common_success_response.success_volunteer_registration.status_code)
         else:
             # error retrieval for api
             # logger adding(r.json())
             response = common_failure_response_structure(common_failure_response.location_creation_error.message,
                                                          status=common_failure_response.location_creation_error.status_code,
-                                                         custom_error_code=common_failure_response.location_creation_error.custom_code)
+                                                         custom_code=common_failure_response.location_creation_error.custom_code)
             return Response(response, status=common_failure_response.location_creation_error.status_code)
 
 
@@ -99,10 +99,10 @@ class UpdateVolunteerPassword(UpdateAPIView):
         if not serializer.is_valid():
             response = common_failure_response_structure(serializer.errors,
                                                          status=common_failure_response.validation_error.status_code,
-                                                         custom_error_code=common_failure_response.validation_error.custom_code)
+                                                         custom_code=common_failure_response.validation_error.custom_code)
             return Response(response, status=status.HTTP_422_UNPROCESSABLE_ENTITY)
         self.update(request)
         data = custom_success_handler(common_success_response.success_volunteer_password.message,
                                       status_code=common_success_response.success_volunteer_password.status_code,
-                                      custom_success_code=common_success_response.success_volunteer_password.custom_code)
+                                      custom_code=common_success_response.success_volunteer_password.custom_code)
         return Response(data, status=common_success_response.success_volunteer_password.status_code)

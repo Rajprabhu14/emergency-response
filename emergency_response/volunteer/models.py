@@ -1,9 +1,12 @@
 import uuid
-from django.contrib.auth.models import AbstractUser, AbstractBaseUser, PermissionsMixin
+
+from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.contrib.gis.db import models as geo_models
 from django.db import models
-from volunteer.manager import CustomVolunteerManager
 from django.utils import timezone
+
+from volunteer.manager import CustomVolunteerManager
+
 # Create your models here.
 
 
@@ -46,11 +49,36 @@ class Volunteer(AbstractBaseUser, PermissionsMixin):
     is_staff = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
     is_volunteer = models.BooleanField(default=False)
+    is_customer = models.BooleanField(default=False)
     date_joined = models.DateTimeField(default=timezone.now)
     objects = CustomVolunteerManager()
 
-    cordering = ['-verfication_completed']
-    db_table = 'volunteer_detail'
+    ordering = ['-verfication_completed']
+
+    class Meta:
+        db_table = 'volunteer_detail'
 
     def __str__(self):
         return 'Name- %s - phone_number - %s status-%s' % (self.name, self.phone_number, str(self.verfication_completed))
+
+
+class CustomerProfileData(models.Model):
+    uid = models.UUIDField(default=uuid.uuid4, unique=True, editable=False)
+    volunteer = models.ForeignKey(Volunteer, on_delete=models.DO_NOTHING)
+
+    class Meta:
+        db_table = 'customer_profile_table'
+
+    def __str__(self):
+        return '{}'.format(self.volunteer.email)
+
+
+class VolunteerProfileData(models.Model):
+    uid = models.UUIDField(default=uuid.uuid4, unique=True, editable=False)
+    volunteer = models.ForeignKey(Volunteer, on_delete=models.DO_NOTHING)
+
+    class Meta:
+        db_table = 'volunteer_profile_table'
+
+    def __str__(self):
+        return '{}'.format(self.volunteer.email)

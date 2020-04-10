@@ -1,7 +1,8 @@
-from django.contrib import admin
-from customer.models import CustomerDetails
 # Register your models here.
 from django.conf import settings
+from django.contrib import admin
+
+from customer.models import CustomerDetails
 
 
 class StaffRequiredAdminMixin(object):
