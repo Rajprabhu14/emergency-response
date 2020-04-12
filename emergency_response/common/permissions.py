@@ -1,6 +1,7 @@
 from django.contrib.auth.models import AnonymousUser
 from rest_framework import permissions
-from rest_framework.permissions import BasePermission, DjangoModelPermissions
+from rest_framework.permissions import (BasePermission, DjangoModelPermissions,
+                                        IsAuthenticated)
 
 from common.exceptions import CustomMethodNotAllowed
 
@@ -20,6 +21,7 @@ class CustomPermissionRules(BasePermission):
     """
     Custom permission to only allow owners of an object to edit it.
     """
+
     def has_permission(self, request, view):
         if request.method == 'POST' and isinstance(request.user, AnonymousUser):
             return True
@@ -46,8 +48,27 @@ class IsOwnerOrReadOnly(BasePermission):
 
 class MethodPermission(BasePermission):
     """ Generic Method allowed permission class"""
+
     def has_permission(self, request, view):
         if request.method in view.allowed_methods:
             return True
         else:
             raise CustomMethodNotAllowed
+
+
+class IsCustomerAuthenticated(BasePermission):
+    """
+    Allows access only to authenticated Customer users.
+    """
+
+    def has_permission(self, request, view):
+        return bool(request.user and request.user.is_authenticated and request.user.is_customer)
+
+
+class IsVolunteerAuthenticated(BasePermission):
+    """
+    Allows access only to authenticated Customer users.
+    """
+
+    def has_permission(self, request, view):
+        return bool(request.user and request.user.is_authenticated and request.user.is_volunteer)

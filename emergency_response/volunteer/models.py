@@ -64,7 +64,7 @@ class Volunteer(AbstractBaseUser, PermissionsMixin):
 
 class CustomerProfileData(models.Model):
     uid = models.UUIDField(default=uuid.uuid4, unique=True, editable=False)
-    volunteer = models.ForeignKey(Volunteer, on_delete=models.DO_NOTHING)
+    volunteer = models.ForeignKey(Volunteer, on_delete=models.CASCADE)
 
     class Meta:
         db_table = 'customer_profile_table'
@@ -75,7 +75,7 @@ class CustomerProfileData(models.Model):
 
 class VolunteerProfileData(models.Model):
     uid = models.UUIDField(default=uuid.uuid4, unique=True, editable=False)
-    volunteer = models.ForeignKey(Volunteer, on_delete=models.DO_NOTHING)
+    volunteer = models.ForeignKey(Volunteer, on_delete=models.CASCADE)
 
     class Meta:
         db_table = 'volunteer_profile_table'

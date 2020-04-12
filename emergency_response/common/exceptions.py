@@ -1,5 +1,5 @@
 from rest_framework import status
-from rest_framework.exceptions import APIException
+from rest_framework.exceptions import APIException, NotAuthenticated
 from rest_framework.views import exception_handler
 
 from common.constants import common_failure_response
@@ -37,6 +37,13 @@ class CustomerNotActivated(APIException):
     custom_code = common_failure_response.incorrect_customer_uid.custom_code
     default_detail = common_failure_response.incorrect_customer_uid.message
     default_code = common_failure_response.incorrect_customer_uid.default_code
+
+
+class CustomNotAuthenticated(NotAuthenticated):
+    status_code = common_failure_response.unauthorized.status_code
+    custom_code = common_failure_response.unauthorized.custom_code
+    default_detail = common_failure_response.unauthorized.message
+    default_code = common_failure_response.unauthorized.default_code
 
 
 def custom_response_handler(exc, context):
@@ -79,7 +86,10 @@ def custom_exception_handler(exc, context):
         data['status_code'] = exc.status_code
         data['status'] = 'failure'
         data['result'] = exc.detail
-        if exc.custom_code:
-            data['custom_code'] = exc.custom_code
+        try:
+            if exc.custom_code:
+                data['custom_code'] = exc.custom_code
+        except Exception:
+            pass
         response.data = data
     return response

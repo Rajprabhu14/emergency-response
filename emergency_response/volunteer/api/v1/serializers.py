@@ -51,6 +51,8 @@ class VolunteerSerializer(serializers.ModelSerializer):
             address=validated_data['address'],
             location=validated_data['location'],
             password=validated_data['password'],
+            is_volunteer=validated_data['is_volunteer'],
+            is_customer=validated_data['is_customer'],
         )
 
         return volunteer
@@ -59,7 +61,7 @@ class VolunteerSerializer(serializers.ModelSerializer):
         model = Volunteer
         multiple_lookup_field = ('uid', 'pk')
         fields = ['uid', 'email', 'name', 'phone_number', 'address',
-                  'location', 'verfication_completed', 'other_details', 'password', 'conform_password','is_volunteer', 'is_customer']
+                  'location', 'verfication_completed', 'other_details', 'password', 'conform_password', 'is_volunteer', 'is_customer']
         write_only_fields = ('location', 'password', 'conform_password')
         read_only_field = ('email', 'name', 'address', 'uid')
 

@@ -8,11 +8,13 @@ from rest_framework import status
 from rest_framework.generics import CreateAPIView, RetrieveUpdateAPIView
 from rest_framework.parsers import JSONParser
 from rest_framework.response import Response
+from rest_framework_simplejwt.authentication import JWTAuthentication
 
 from common.constants import common_failure_response, common_success_response
 from common.exceptions import (CustomerNotActivated,
                                common_failure_response_structure,
                                custom_success_handler)
+from common.permissions import IsCustomerAuthenticated
 from customer.api.v1.serializers import (CustomerDetailSerializer,
                                          ManipulateCustomerDetailSerializer)
 from customer.models import CustomerDetails
@@ -21,6 +23,8 @@ from customer.models import CustomerDetails
 class CreateCustomer(CreateAPIView):
     serializer_class = CustomerDetailSerializer
     parser_classes = [JSONParser]
+    permission_classes = (IsCustomerAuthenticated,)  # customer user permission check
+    authentication_classes = (JWTAuthentication, )  # jwt auth method
 
     def post(self, request):
         serializer = self.serializer_class(data=request.data)
@@ -43,8 +47,6 @@ class CreateCustomer(CreateAPIView):
                                           custom_code=common_success_response.success_customer_data_entry.custom_code)
             return Response(data, status=common_success_response.success_customer_data_entry.status_code)
         else:
-            # error retrieval for api
-            # logger adding(r.json())
             response = common_failure_response_structure(common_failure_response.location_creation_error.messages,
                                                          status=common_failure_response.location_creation_error.status_code,
                                                          custom_code=common_failure_response.location_creation_error.custom_code)

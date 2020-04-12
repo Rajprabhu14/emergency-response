@@ -1,6 +1,7 @@
 from django.utils.translation import gettext_lazy as _
 from dotmap import DotMap
 from rest_framework import status
+
 common_success_response = DotMap(
     success_customer_data_entry=DotMap(message=_('Request submited. You will receive call shortly'),
                                        status_code=status.HTTP_201_CREATED,
@@ -14,6 +15,9 @@ common_success_response = DotMap(
     success_customer_location_volunteering=DotMap(message=_('Success'),
                                                   status_code=status.HTTP_200_OK,
                                                   custom_code=15004),
+    success_customer_registration=DotMap(message=_('Customer registered. You will receive call shortly'),
+                                         status_code=status.HTTP_201_CREATED,
+                                         custom_code=15005),
 )
 
 common_failure_response = DotMap(
@@ -48,5 +52,8 @@ common_failure_response = DotMap(
                          status_code=status.HTTP_404_NOT_FOUND,
                          default_code='URL_NOT_PRESENT',
                          custom_code=19008),
-
+    unauthorized=DotMap(message=_('Authentication credentials were not provided.'),
+                        status_code=status.HTTP_401_UNAUTHORIZED,
+                        default_code='UNAUTHORIZED',
+                        custom_code=19009)
 )

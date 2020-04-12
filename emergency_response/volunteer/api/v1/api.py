@@ -48,9 +48,15 @@ class CreateVolunteerAPI(CreateAPIView):
             # serializer.validated_data.update({'location': point})
             # serializer.save()
             self.create(request)
-            data = custom_success_handler(common_success_response.success_volunteer_registration.message,
-                                          status_code=common_success_response.success_volunteer_registration.status_code,
-                                          custom_code=common_success_response.success_volunteer_registration.custom_code)
+            try:
+                if request.data['is_customer']:
+                    data = custom_success_handler(common_success_response.success_customer_registration.message,
+                                                  status_code=common_success_response.success_customer_registration.status_code,
+                                                  custom_code=common_success_response.success_customer_registration.custom_code)
+            except Exception:
+                data = custom_success_handler(common_success_response.success_volunteer_registration.message,
+                                              status_code=common_success_response.success_volunteer_registration.status_code,
+                                              custom_code=common_success_response.success_volunteer_registration.custom_code)
             return Response(data, status=common_success_response.success_volunteer_registration.status_code)
         else:
             # error retrieval for api
