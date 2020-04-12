@@ -12,3 +12,4 @@ env/
 
 # Coverage service
 htmlcov/
+.coverage
