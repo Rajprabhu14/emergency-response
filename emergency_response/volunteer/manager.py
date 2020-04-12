@@ -1,4 +1,5 @@
 from django.contrib.auth.models import BaseUserManager
+
 # from django.contrib.auth.hashers import make_password
 
 
@@ -9,6 +10,7 @@ class CustomVolunteerManager(BaseUserManager):
         Create and save a User with the given email and password.
         """
         extra_fields.setdefault('is_active', True)
+        extra_fields.setdefault('verfication_completed', True)
         if not email:
             raise ValueError(('The Email must be set'))
         email = self.normalize_email(email)

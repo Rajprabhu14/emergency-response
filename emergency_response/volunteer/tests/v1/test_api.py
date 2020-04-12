@@ -18,7 +18,7 @@ class CreateCustomerDetailsAPITests(APITestCase):
             "email": "rajprabhas123a@egmore.com",
             "name": "Rajprabhu",
             "phone_number": "+918757652757",
-            "address": "74/24, throwpathi amman koil 5th st, velachery, chennai-42",
+            "address": "74/24,  velachery, chennai-42",
             "password": "Rajpabhu@123",
             "conform_password": "Rajpabhu@123",
             "is_volunteer": True
@@ -34,7 +34,7 @@ class CreateCustomerDetailsAPITests(APITestCase):
             "email": "rajprabhas123a@egmore.com",
             "name": "Rajprabhu",
             "phone_number": "+918757652757",
-            "address": "74/24, throwpathi amman koil 5th st, velachery, chennai-42",
+            "address": "74/24,  velachery, chennai-42",
             "password": "Rajpabhu@123",
             "conform_password": "Rajpabhu@123",
             "is_customer": True

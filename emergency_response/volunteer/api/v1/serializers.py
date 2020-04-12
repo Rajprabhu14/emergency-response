@@ -78,14 +78,6 @@ class ManipulateVolunteerSerializer(serializers.ModelSerializer):
     address = serializers.CharField(max_length=500)
     other_details = serializers.CharField(max_length=500)
     verfication_completed = serializers.BooleanField(read_only=True)
-    # latitude = serializers.FloatField(read_only=True)
-    # longitude = serializers.FloatField(read_only=True)
-
-    # def get_latitude(self):
-    #     return 2.5
-
-    # def get_longitude(self):
-    #     return 2.5
 
     class Meta:
         model = Volunteer

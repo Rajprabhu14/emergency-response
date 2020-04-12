@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from rest_framework_gis.serializers import GeoFeatureModelSerializer
+
 from customer.models import CustomerDetails, order_choice
 
 
@@ -17,8 +18,8 @@ class CustomerDetailSerializer(GeoFeatureModelSerializer):
     def get_order_status(self, obj):
         return obj.get_order_status_display()
 
-    def get_location_details(self, obj):
-        return obj.location.geojson
+    # def get_location_details(self, obj):
+    #     return obj.location.geojson
 
 
 class ManipulateCustomerDetailSerializer(serializers.ModelSerializer):

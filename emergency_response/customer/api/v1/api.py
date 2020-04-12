@@ -91,3 +91,10 @@ class UpdateCustomerDetailsAPI(RetrieveUpdateAPIView):
 
     def perform_update(self, serializer):
         serializer.save(updated_by=self.request.user)
+
+    def patch(self, request, *args, **kwargs):
+        res = self.partial_update(request, *args, **kwargs)
+        data = custom_success_handler(res.data,
+                                      status_code=common_success_response.success_customer_update.status_code,
+                                      custom_code=common_success_response.success_customer_update.custom_code)
+        return Response(data, status=common_success_response.success_customer_retrieve.status_code)

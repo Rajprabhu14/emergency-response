@@ -1,6 +1,4 @@
-import json
 
-import requests
 from django.conf import settings
 from django.contrib.gis.geos import Point
 from django.shortcuts import get_object_or_404
@@ -14,10 +12,7 @@ from rest_framework.response import Response
 from common.constants import common_failure_response, common_success_response
 from common.exceptions import (common_failure_response_structure,
                                custom_success_handler)
-# from common.permissions import (CustomPermissionRules,
-#                                 CustomPostDjangoPermission,
-#                                 CustomVolunteeringDjangoPermission,
-#                                 IsOwnerOrReadOnly)
+from common.utils import map_my_india_api_request
 from volunteer.api.v1.serializers import (ManipulateVolunteerSerializer,
                                           UpdatePasswordVolunteerSerializer,
                                           VolunteerSerializer)
@@ -38,22 +33,25 @@ class CreateVolunteerAPI(CreateAPIView):
                                                          custom_code=common_failure_response.validation_error.custom_code)
             return Response(response, status=status.HTTP_422_UNPROCESSABLE_ENTITY)
         # Get data for location
-        settings.MAP_MY_INDIA__PARAMS['address'] = serializer.validated_data['address']
-        r = requests.get(url=settings.MAP_MY_INDIA_URL, params=settings.MAP_MY_INDIA__PARAMS)
-        if r.status_code == 200:
-            # location obtain from mapmy india api call
-            data = json.loads(r.json()['data'][0])
-            point = Point(data['copResults']['longitude'], data['copResults']['latitude'], srid=4326)
-            request.data.update({'location': point})
-            # serializer.validated_data.update({'location': point})
-            # serializer.save()
+        res, res_status = map_my_india_api_request(address=serializer.validated_data['address'])
+        if res_status:
+            point = Point(res['longitude'], res['latitude'], srid=4326)
+            if type(request.data) == dict:
+                request.data['location'] = point
+            else:
+                request.data.update({'location': point})
             self.create(request)
             try:
                 if request.data['is_customer']:
                     data = custom_success_handler(common_success_response.success_customer_registration.message,
                                                   status_code=common_success_response.success_customer_registration.status_code,
                                                   custom_code=common_success_response.success_customer_registration.custom_code)
-            except Exception:
+                else:
+                    data = custom_success_handler(common_success_response.success_volunteer_registration.message,
+                                                  status_code=common_success_response.success_volunteer_registration.status_code,
+                                                  custom_code=common_success_response.success_volunteer_registration.custom_code)
+                # return Response(data, status=common_success_response.success_volunteer_registration.status_code)
+            except Exception as e:
                 data = custom_success_handler(common_success_response.success_volunteer_registration.message,
                                               status_code=common_success_response.success_volunteer_registration.status_code,
                                               custom_code=common_success_response.success_volunteer_registration.custom_code)
