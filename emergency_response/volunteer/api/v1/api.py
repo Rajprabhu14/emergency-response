@@ -51,7 +51,7 @@ class CreateVolunteerAPI(CreateAPIView):
                                                   status_code=common_success_response.success_volunteer_registration.status_code,
                                                   custom_code=common_success_response.success_volunteer_registration.custom_code)
                 # return Response(data, status=common_success_response.success_volunteer_registration.status_code)
-            except Exception as e:
+            except Exception:
                 data = custom_success_handler(common_success_response.success_volunteer_registration.message,
                                               status_code=common_success_response.success_volunteer_registration.status_code,
                                               custom_code=common_success_response.success_volunteer_registration.custom_code)
