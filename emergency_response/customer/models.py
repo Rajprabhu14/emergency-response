@@ -33,7 +33,8 @@ class CustomerDetails(models.Model):
     location = geo_models.PointField(srid=4326, spatial_index=True, blank=True, null=True)
     verfication_completed = models.BooleanField(default=False)
     other_detail = models.TextField(blank=True, null=True)
-    updated_by = models.ForeignKey(Volunteer, on_delete=models.SET_NULL, null=True)
+    customer = models.ForeignKey(Volunteer, on_delete=models.SET_NULL, null=True, related_name='customer')
+    updated_by = models.ForeignKey(Volunteer, on_delete=models.SET_NULL, null=True, related_name='volunteer')
 
     class Meta:
         ordering = ['-verfication_completed']

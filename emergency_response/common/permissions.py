@@ -62,13 +62,13 @@ class IsCustomerAuthenticated(BasePermission):
     """
 
     def has_permission(self, request, view):
-        return bool(request.user and request.user.is_authenticated and request.user.is_customer)
+        return bool((request.user and request.user.is_authenticated and request.user.is_customer) or request.user.is_superuser)
 
 
 class IsVolunteerAuthenticated(BasePermission):
     """
-    Allows access only to authenticated Customer users.
+    Allows access only to authenticated Volunteer users.
     """
 
     def has_permission(self, request, view):
-        return bool(request.user and request.user.is_authenticated and request.user.is_volunteer)
+        return bool((request.user and request.user.is_authenticated and request.user.is_volunteer) or request.user.is_superuser)
