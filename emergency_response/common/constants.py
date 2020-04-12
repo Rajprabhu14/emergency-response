@@ -18,6 +18,12 @@ common_success_response = DotMap(
     success_customer_registration=DotMap(message=_('Customer registered. You will receive call shortly'),
                                          status_code=status.HTTP_201_CREATED,
                                          custom_code=15005),
+    success_customer_retrieve=DotMap(
+        status_code=status.HTTP_200_OK,
+        custom_code=15006),
+    success_customer_update=DotMap(
+        status_code=status.HTTP_200_OK,
+        custom_code=15007),
 )
 
 common_failure_response = DotMap(
