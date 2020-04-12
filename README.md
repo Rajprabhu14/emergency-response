@@ -33,6 +33,15 @@ Install project dependancies using pip
 pip install -r requirements.txt
 ```
 
+To run Test
+```
+python manage.py test
+```
+To generate coverage Report
+```
+coverage run --source='.' manage.py test
+coverage report
+```
 ## API V1
 Description| URL | Allowed Verbs |
 | :--- | :--- | :--- |
